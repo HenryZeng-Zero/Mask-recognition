@@ -1,26 +1,35 @@
-import subprocess
-from sound import Play
-import json 
+import cv2   
+from ctypes import POINTER, c_char_p,CDLL,c_ubyte,c_int
+import numpy as np
+ 
+LibMask = CDLL("/home/pi/Mask/build/libMask.so")
 
-Mask = "build/Mask"
-pyramidbox_lite = "/home/pi/Mask/Data/pyramidbox_lite.nb"
-mask_detector = "/home/pi/Mask/Data/mask_detector.nb"
+# LibMask.VC.argtypes(POINTER(c_ubyte),c_int,c_int)
 
-o = subprocess.Popen([Mask,pyramidbox_lite,mask_detector],stdout=subprocess.PIPE, stderr=subprocess.STDOUT,bufsize=1)
+# LibMask.LoadModel.argtypes(c_char_p,c_char_p)
+# ========================================================
+# LibMask.LoadModel("/home/pi/Mask/Data/mask_detector.nb".encode("utf-8"),"/home/pi/Mask/Data/pyramidbox_lite.nb".encode('utf-8'))
 
-play = Play(5,"zh")
-j = None
-while True:
-    line = str(o.stdout.readline(),encoding = "utf-8")
 
-    try:
-        j = json.loads(line)
-        for i in j["Data"]:
-            if (float(i["p"]) < 0.8):
-                play.Play("你没有戴口罩")
-    except:
-        pass
-    print(j)
 
-    
-    # o.stdout.flush()
+# # UcharImg = Img.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
+
+
+# LibMask.VC.argtypes = (POINTER(c_ubyte),c_int,c_int,)
+# LibMask.VC.restype = (ctypes.c_char,)
+
+# ret = LibMask.VC(UcharImg,rows,cols)
+
+LibMask.LoadModel("/home/pi/Mask/Data/mask_detector.nb".encode("utf-8"),"/home/pi/Mask/Data/pyramidbox_lite.nb".encode('utf-8'))
+
+
+Img = cv2.imread("/home/pi/Mask/Data/test_img.jpg")
+cols = Img.shape[1]
+rows = Img.shape[0]
+
+UcharImg = Img.ctypes.data_as(POINTER(c_ubyte))
+
+LibMask.VC.argtypes = (POINTER(c_ubyte),c_int,c_int,)
+LibMask.VC.restype = c_char_p
+
+print(LibMask.VC(UcharImg,rows,cols))

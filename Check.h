@@ -279,7 +279,7 @@ char* Check::Sync(cv::Mat img_)
 
     char *data;
     int len = json.length();
-    data = (char *)malloc((len + 1) * sizeof(char));
+    data = (char *)malloc((len+1) * sizeof(char));
     json.copy(data, len, 0);
 
     return data;

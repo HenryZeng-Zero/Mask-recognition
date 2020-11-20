@@ -46,7 +46,7 @@ else()
     return()
 endif()
 
-add_executable(Mask main.cpp Check2.h)
-# add_library(Mask SHARED main.cpp Check.h) # 编译动态库
+# add_executable(Mask main.cpp Check2.h)
+add_library(Mask SHARED main.cpp Check.h) # 编译动态库
 # add_executable(Mask main.cpp Check.h)
 target_link_libraries(Mask paddle_light_api_shared ${OpenCV_LIBS})

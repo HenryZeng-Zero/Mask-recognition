@@ -1,35 +1,30 @@
-import cv2   
-from ctypes import POINTER, c_char_p,CDLL,c_ubyte,c_int
-import numpy as np
- 
-LibMask = CDLL("/home/pi/Mask/build/libMask.so")
-
-# LibMask.VC.argtypes(POINTER(c_ubyte),c_int,c_int)
-
-# LibMask.LoadModel.argtypes(c_char_p,c_char_p)
-# ========================================================
-# LibMask.LoadModel("/home/pi/Mask/Data/mask_detector.nb".encode("utf-8"),"/home/pi/Mask/Data/pyramidbox_lite.nb".encode('utf-8'))
+import cv2
+from ctypes import POINTER, c_char_p, CDLL, c_ubyte, c_int
+import json
 
 
 
-# # UcharImg = Img.ctypes.data_as(ctypes.POINTER(ctypes.c_ubyte))
+class Mask_Api():
+    def __init__(self, cdll_file = "./build/libMask.so"):
+        # cdll_file = "/home/pi/Mask/build/libMask.so"
+        self.LibMask = CDLL(cdll_file)
 
+        self.LibMask.VC.argtypes = (POINTER(c_ubyte), c_int, c_int,)
+        self.LibMask.VC.restype = c_char_p
 
-# LibMask.VC.argtypes = (POINTER(c_ubyte),c_int,c_int,)
-# LibMask.VC.restype = (ctypes.c_char,)
+    def Load(self, detect_model_file = './Data/pyramidbox_lite.nb', classify_model_file = './Data/mask_detector.nb'):
+        self.detect_model_file = detect_model_file.encode('utf-8')
+        self.classify_model_file = classify_model_file.encode('utf-8')
 
-# ret = LibMask.VC(UcharImg,rows,cols)
+        self.LibMask.LoadModel(self.detect_model_file,self.classify_model_file)
 
-LibMask.LoadModel("/home/pi/Mask/Data/mask_detector.nb".encode("utf-8"),"/home/pi/Mask/Data/pyramidbox_lite.nb".encode('utf-8'))
+    def Check(self,Img):
+        UcharImg = Img.ctypes.data_as(POINTER(c_ubyte))
 
+        Returns = self.LibMask.VC(UcharImg, rows, cols)
 
-Img = cv2.imread("/home/pi/Mask/Data/test_img.jpg")
-cols = Img.shape[1]
-rows = Img.shape[0]
+        Data = str(Returns,encoding="utf-8")[:-2]
 
-UcharImg = Img.ctypes.data_as(POINTER(c_ubyte))
+        Jsons = json.loads(Data)
 
-LibMask.VC.argtypes = (POINTER(c_ubyte),c_int,c_int,)
-LibMask.VC.restype = c_char_p
-
-print(LibMask.VC(UcharImg,rows,cols))
+        print(Jsons)

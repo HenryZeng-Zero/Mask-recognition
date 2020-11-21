@@ -19,12 +19,18 @@ class Mask_Api():
         self.LibMask.LoadModel(self.detect_model_file,self.classify_model_file)
 
     def Check(self,Img):
-        UcharImg = Img.ctypes.data_as(POINTER(c_ubyte))
+        try:
+            UcharImg = Img.ctypes.data_as(POINTER(c_ubyte))
 
-        Returns = self.LibMask.VC(UcharImg, rows, cols)
+            cols = Img.shape[1]
+            rows = Img.shape[0]
 
-        Data = str(Returns,encoding="utf-8")[:-2]
+            Returns = self.LibMask.VC(UcharImg, rows, cols)
 
-        Jsons = json.loads(Data)
+            Data = str(Returns,encoding="utf-8")
 
-        print(Jsons)
+            Jsons = json.loads(Data)
+
+            return Jsons
+        except:
+            return None

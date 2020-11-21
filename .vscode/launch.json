@@ -10,6 +10,13 @@
             "request": "launch",
             "program": "${workspaceFolder}/MaskApi.py",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "CycleTest",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/CycleTest.py",
+            "console": "integratedTerminal"
         }
     ]
 }

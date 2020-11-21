@@ -149,7 +149,7 @@ public:
 
     void SecondStep();
 
-    char* Sync(cv::Mat img_);
+    const char* Sync(cv::Mat img_,int cols,int rows);
 };
 
 void Check::LoadModel(std::string det_model_file,std::string class_model_file)
@@ -266,23 +266,22 @@ void Check::SecondStep()
     json += "]}";
 }
 
-char* Check::Sync(cv::Mat img_)
+const char* Check::Sync(cv::Mat img_,int cols,int rows)
 {
     img = img_;
 
-    width = img.cols;
-    height = img.rows;
+    width = cols;
+    height = rows;
     s_width = static_cast<int>(width * shrink);
     s_height = static_cast<int>(height * shrink);
     FirstStep();
     SecondStep();
 
-    char *data;
-    int len = json.length();
-    data = (char *)malloc((len+1) * sizeof(char));
-    json.copy(data, len, 0);
+    // int len = json.length();
+    // data = (char *)malloc((len+1) * sizeof(char));
+    // json.copy(data, len, 0);
 
-    return data;
+    return json.data();
 }
 
 #endif //MASK_CHECK_H

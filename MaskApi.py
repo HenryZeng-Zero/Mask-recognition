@@ -31,6 +31,7 @@ class Mask_Api():
 
             Jsons = json.loads(Data)
 
+            print(Jsons)
             return Jsons
         except:
             return None

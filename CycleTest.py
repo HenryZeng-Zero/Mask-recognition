@@ -63,7 +63,7 @@ def Check(facedata):
 def CheckList(n):
 
     count = 0
-    for i in range(0,n):
+    for i in range(0, n):
         facedata = Dll.Check(PicFront(cap.read()))
         dat = Check(facedata)
         if dat == 0:
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     while(True):
 
         out = CheckList(20)
-        print(out,time.time())
+        print(out, time.time())
 
         if out == None:
             continue
@@ -100,5 +100,3 @@ if __name__ == "__main__":
             # player.Play("您已戴好口罩，欢迎进入!")
             os.system('mplayer /home/pi/Mask/mask.mp3')
             key = False
-
-            

@@ -17,6 +17,6 @@ class Play():
         self.Say = Speech(spd,lang)
 
     def Play(self,text):
-        with open('tts.mp3','wb+') as f:
+        with open('/home/pi/Mask/tts.mp3','wb+') as f:
             f.write(self.Say.Speak(text))
-        os.system('mplayer tts.mp3')
+        os.system('mplayer /home/pi/Mask/tts.mp3')
